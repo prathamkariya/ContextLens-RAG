@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ContextLens RAG</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <h2> Ingestion Pipeline</h2>
+            <p>Upload your PDF to build the 'Open Book' knowledge base.</p>
+            
+            <form id="upload-form">
+                <input type="file" id="pdf-upload" accept=".pdf" required>
+                <button type="submit" id="upload-btn">Index & Build Vector DB</button>
+            </form>
+            <div id="upload-status"></div>
+            
+            <hr>
+            <div class="architecture-notes">
+                <h3>Architectural Triad:</h3>
+                <ol>
+                    <li><b>Indexing:</b> Recursive Splitter</li>
+                    <li><b>Retrieval:</b> Hybrid Search</li>
+                    <li><b>Generation:</b> Groq Reasoning Engine</li>
+                </ol>
+            </div>
+        </aside>
+
+        <main class="chat-container">
+            <header class="chat-header">
+                <h1> ContextLens RAG: Bridge to Truth</h1>
+            </header>
+            
+            <div class="chat-history" id="chat-history">
+                <div class="message system-message">
+                    Welcome! Please upload a PDF to begin.
+                </div>
+            </div>
+
+            <form id="chat-form" class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Ask a question about your document..." required autocomplete="off">
+                <button type="submit" id="send-btn">Send</button>
+            </form>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>

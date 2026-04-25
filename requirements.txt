@@ -1,0 +1,19 @@
+# WEB SERVER & ORCHESTRATION 
+Flask==3.1.0                  # Web framework for custom HTML/JS frontend
+langchain==1.2.10             # Core RAG framework
+langchain-core==1.2.14        # Stable v1.x core logic
+langchain-community==0.4.1    # Community loaders and retrievers
+python-dotenv==1.0.1          # Secure API key management
+
+# INGESTION & DATA (LAYER 1 & 2) 
+pypdf==6.7.1                  # PDF extraction
+langchain-text-splitters==1.1.1 # Recursive character splitting logic
+
+# RETRIEVAL (LAYER 4 & 6) 
+sentence-transformers==3.3.1  # Embedding engine
+langchain-huggingface==1.2.0  # Local embedding bridge for v1.x
+faiss-cpu==1.13.2             # High-speed vector storage
+rank_bm25==0.2.2              # Keyword matching (Sparse Vector)
+
+# GENERATION (LAYER 9)
+langchain-groq==1.1.2         # High-speed Llama 3 connection
