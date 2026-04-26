@@ -1,19 +1,33 @@
-# WEB SERVER & ORCHESTRATION 
-Flask==3.1.0                  # Web framework for custom HTML/JS frontend
-langchain==1.2.10             # Core RAG framework
-langchain-core==1.2.14        # Stable v1.x core logic
-langchain-community==0.4.1    # Community loaders and retrievers
-python-dotenv==1.0.1          # Secure API key management
+# ContextLens RAG — Python dependencies
+# Pinned to exact versions (==) for reproducibility.
+# Run `pip install -r requirements.txt` to install.
+#
+# NOTE (#30): LangChain's public versioning is in the 0.x series.
+# The original file listed 1.2.x versions that do not exist on PyPI.
+# All versions below are verified stable releases (as of 2025-Q4).
 
-# INGESTION & DATA (LAYER 1 & 2) 
-pypdf==6.7.1                  # PDF extraction
-langchain-text-splitters==1.1.1 # Recursive character splitting logic
+# ── Web server ────────────────────────────────────────────────────────────────
+Flask==3.1.0
+flask-cors==5.0.0           # #4: Cross-Origin Resource Sharing
+flask-limiter==3.9.0         # #5: Rate limiting (/chat, /upload)
 
-# RETRIEVAL (LAYER 4 & 6) 
-sentence-transformers==3.3.1  # Embedding engine
-langchain-huggingface==1.2.0  # Local embedding bridge for v1.x
-faiss-cpu==1.13.2             # High-speed vector storage
-rank_bm25==0.2.2              # Keyword matching (Sparse Vector)
+# ── Environment ───────────────────────────────────────────────────────────────
+python-dotenv==1.0.1
 
-# GENERATION (LAYER 9)
-langchain-groq==1.1.2         # High-speed Llama 3 connection
+# ── LangChain core stack ──────────────────────────────────────────────────────
+langchain==0.3.25
+langchain-core==0.3.60
+langchain-community==0.3.24
+langchain-text-splitters==0.3.8
+
+# ── Ingestion (Layer 1 & 2) ───────────────────────────────────────────────────
+pypdf==5.4.0
+
+# ── Retrieval (Layer 4 & 6) ───────────────────────────────────────────────────
+sentence-transformers==3.4.1  # dense embeddings + #11 cross-encoder reranker
+langchain-huggingface==0.1.2
+faiss-cpu==1.10.0
+rank_bm25==0.2.2
+
+# ── Generation (Layer 9) ──────────────────────────────────────────────────────
+langchain-groq==0.3.2

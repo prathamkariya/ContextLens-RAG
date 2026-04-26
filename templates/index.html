@@ -3,50 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ContextLens RAG — grounded AI answers with auditable source evidence from your documents.">
     <title>ContextLens RAG</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="app-container">
         <aside class="sidebar">
-            <h2> Ingestion Pipeline</h2>
-            <p>Upload your PDF to build the 'Open Book' knowledge base.</p>
-            
+            <h2>⚙ Ingestion Pipeline</h2>
+            <p>Upload a PDF to build the knowledge base.</p>
+
             <form id="upload-form">
-                <input type="file" id="pdf-upload" accept=".pdf" required>
-                <button type="submit" id="upload-btn">Index & Build Vector DB</button>
+                <!-- #22: styled file picker with filename display -->
+                <label class="file-picker">
+                    <input type="file" id="pdf-upload" accept=".pdf" required>
+                    <span id="file-label">Choose a PDF…</span>
+                </label>
+                <button type="submit" id="upload-btn">Index &amp; Build Vector DB</button>
             </form>
             <div id="upload-status"></div>
-            
+
             <hr>
             <div class="architecture-notes">
                 <h3>Architectural Triad:</h3>
                 <ol>
                     <li><b>Indexing:</b> Recursive Splitter</li>
-                    <li><b>Retrieval:</b> Hybrid Search</li>
-                    <li><b>Generation:</b> Groq Reasoning Engine</li>
+                    <li><b>Retrieval:</b> Hybrid RRF + Cross-Encoder Reranker</li>
+                    <li><b>Generation:</b> Groq Llama 3.3</li>
                 </ol>
             </div>
         </aside>
 
         <main class="chat-container">
             <header class="chat-header">
-                <h1> ContextLens RAG: Bridge to Truth</h1>
+                <h1>ContextLens RAG: Bridge to Truth</h1>
             </header>
-            
-            <div class="chat-history" id="chat-history">
-                <div class="message system-message">
-                    Welcome! Please upload a PDF to begin.
+
+            <!-- #18: scroll-to-bottom button (shown only when scrolled up) -->
+            <div class="scroll-wrapper">
+                <div class="chat-history" id="chat-history">
+                    <div class="message system-message">
+                        Welcome! Upload a PDF to begin your grounded conversation.
+                    </div>
                 </div>
+                <button id="scroll-down-btn" class="scroll-down-btn" title="Scroll to latest">↓</button>
             </div>
 
             <form id="chat-form" class="chat-input-area">
-                <input type="text" id="chat-input" placeholder="Ask a question about your document..." required autocomplete="off">
+                <!-- #16: maxlength on input; counter below -->
+                <div class="input-wrapper">
+                    <input
+                        type="text"
+                        id="chat-input"
+                        placeholder="Ask a question about your document…"
+                        autocomplete="off"
+                        maxlength="500"
+                    >
+                    <span id="char-counter" class="char-counter">0 / 500</span>
+                </div>
                 <button type="submit" id="send-btn">Send</button>
             </form>
         </main>
     </div>
 
+    <!-- marked.js: renders LLM markdown (bold, lists, code blocks) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 </body>
 </html>

@@ -17,7 +17,7 @@ body {
     height: 100%;
 }
 
-/* Sidebar Styling */
+/* ── Sidebar ──────────────────────────────────────────────────────────────── */
 .sidebar {
     width: 300px;
     background-color: #ffffff;
@@ -29,14 +29,43 @@ body {
 }
 
 .sidebar h2 { font-size: 1.2rem; color: #2c3e50; }
-.sidebar p { font-size: 0.9rem; color: #7f8c8d; }
+.sidebar p  { font-size: 0.9rem; color: #7f8c8d; }
 
-#upload-form {
+/* #22: Styled file picker ─────────────────────────────────────────────────── */
+.file-picker {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
+    cursor: pointer;
 }
 
+.file-picker input[type="file"] {
+    /* hidden — the label span is the visible element */
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+#file-label {
+    display: block;
+    padding: 8px 12px;
+    background: #f0f4f8;
+    border: 1px dashed #aab4be;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    color: #555;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+#file-label:hover { background: #e4eaf0; }
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
 button {
     background-color: #3498db;
     color: white;
@@ -45,33 +74,47 @@ button {
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s, opacity 0.2s;
 }
 
-button:hover { background-color: #2980b9; }
+button:hover:not(:disabled) { background-color: #2980b9; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.loading        { opacity: 0.5; pointer-events: none; }
 
-#upload-status { font-size: 0.85rem; font-weight: bold; }
+/* ── Upload status ─────────────────────────────────────────────────────────── */
+#upload-status { font-size: 0.85rem; font-weight: bold; min-height: 1.2em; }
 .success { color: #27ae60; }
-.error { color: #c0392b; }
+.error   { color: #c0392b; }
 
-.architecture-notes { font-size: 0.85rem; color: #555; }
-.architecture-notes ol { margin-left: 20px; margin-top: 10px;}
+.architecture-notes        { font-size: 0.85rem; color: #555; }
+.architecture-notes ol     { margin-left: 20px; margin-top: 10px; }
 
-/* Chat Area Styling */
+/* ── Chat area ────────────────────────────────────────────────────────────── */
 .chat-container {
     flex: 1;
     display: flex;
     flex-direction: column;
     background-color: #f9fbfc;
+    min-width: 0;
 }
 
 .chat-header {
     padding: 20px;
     background-color: #ffffff;
     border-bottom: 1px solid #e0e0e0;
+    flex-shrink: 0;
 }
 
 .chat-header h1 { font-size: 1.5rem; color: #2c3e50; }
+
+/* #18: scroll-wrapper positions the scroll-down button over the chat ──────── */
+.scroll-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
 
 .chat-history {
     flex: 1;
@@ -82,22 +125,113 @@ button:hover { background-color: #2980b9; }
     gap: 15px;
 }
 
+/* #18: Scroll-to-bottom button ─────────────────────────────────────────────── */
+.scroll-down-btn {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #3498db;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+    z-index: 10;
+}
+.scroll-down-btn.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ── Messages ─────────────────────────────────────────────────────────────── */
 .message {
     max-width: 80%;
     padding: 12px 16px;
     border-radius: 8px;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
-.system-message { align-self: center; background-color: #ecf0f1; color: #7f8c8d; font-size: 0.9rem; }
-.user-message { align-self: flex-end; background-color: #3498db; color: white; }
-.bot-message { align-self: flex-start; background-color: #ffffff; border: 1px solid #e0e0e0; }
+.system-message { align-self: center; background: #ecf0f1; color: #7f8c8d; font-size: 0.9rem; }
+.user-message   { align-self: flex-end; background: #3498db; color: white; }
+.bot-message    { align-self: flex-start; background: #ffffff; border: 1px solid #e0e0e0; }
 
-/* Sources Expander */
+/* #17: Typing indicator ─────────────────────────────────────────────────────── */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 14px 18px;
+}
+
+.typing-indicator span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #aab4be;
+    border-radius: 50%;
+    animation: typing-bounce 1.2s infinite ease-in-out;
+}
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing-bounce {
+    0%, 60%, 100% { transform: translateY(0);    opacity: 0.4; }
+    30%            { transform: translateY(-6px); opacity: 1;   }
+}
+
+/* #19: Source badge ─────────────────────────────────────────────────────────── */
+.source-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    background: #eaf4ff;
+    color: #2980b9;
+    border: 1px solid #b3d6f5;
+    border-radius: 12px;
+    padding: 2px 9px;
+    margin-bottom: 6px;
+}
+
+/* #20: Copy button ──────────────────────────────────────────────────────────── */
+.copy-btn {
+    background: none;
+    color: #7f8c8d;
+    font-size: 0.78rem;
+    padding: 2px 6px;
+    font-weight: normal;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 6px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+.copy-btn:hover:not(:disabled) { color: #2c3e50; border-color: #aaa; background: none; }
+
+/* ── Markdown answer text ────────────────────────────────────────────────── */
+.answer-text p             { margin-bottom: 0.6em; }
+.answer-text p:last-child  { margin-bottom: 0; }
+.answer-text ul,
+.answer-text ol            { margin: 0.4em 0 0.6em 1.4em; }
+.answer-text li            { margin-bottom: 0.25em; }
+.answer-text h1,
+.answer-text h2,
+.answer-text h3            { margin: 0.5em 0 0.3em; font-size: 1em; font-weight: 700; }
+.answer-text code          { background: #eef0f3; padding: 1px 5px; border-radius: 3px;
+                             font-family: 'Courier New', monospace; font-size: 0.88em; }
+.answer-text pre           { background: #eef0f3; padding: 10px; border-radius: 4px;
+                             overflow-x: auto; margin: 0.5em 0; }
+.answer-text strong        { font-weight: 600; }
+
+/* ── Sources panel ───────────────────────────────────────────────────────── */
 .sources-container {
     margin-top: 10px;
     border-top: 1px solid #eee;
-    padding-top: 10px;
+    padding-top: 8px;
 }
 
 .sources-btn {
@@ -105,36 +239,71 @@ button:hover { background-color: #2980b9; }
     color: #3498db;
     border: none;
     padding: 0;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     cursor: pointer;
+    font-weight: normal;
     text-decoration: underline;
 }
+.sources-btn:hover { background: none; color: #1a6fa0; }
 
 .sources-content {
-    display: none;
     margin-top: 10px;
-    font-size: 0.8rem;
-    background-color: #f1f2f6;
-    padding: 10px;
     border-radius: 5px;
-    white-space: pre-wrap;
+    overflow: hidden;
 }
 
-/* Input Area */
+/* BUG-010 fix carried forward: one <pre> per chunk */
+.source-chunk {
+    display: block;
+    font-size: 0.76rem;
+    font-family: 'Courier New', Courier, monospace;
+    background: #f1f2f6;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    border-left: 3px solid #3498db;
+    border-radius: 0 4px 4px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+}
+.source-chunk:last-child { margin-bottom: 0; }
+
+/* ── Input area ──────────────────────────────────────────────────────────── */
 .chat-input-area {
     display: flex;
-    padding: 20px;
-    background-color: #ffffff;
+    align-items: flex-end;
+    padding: 16px 20px;
+    background: #ffffff;
     border-top: 1px solid #e0e0e0;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* #16: Input wrapper holds the text field + character counter ─────────────── */
+.input-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
 }
 
 #chat-input {
-    flex: 1;
-    padding: 12px;
+    width: 100%;
+    padding: 11px 12px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-right: 10px;
     font-size: 1rem;
+    resize: none;
 }
 
-.loading { opacity: 0.5; pointer-events: none; }
+#chat-input:focus { outline: none; border-color: #3498db; }
+
+/* #16: Character counter ────────────────────────────────────────────────────── */
+.char-counter {
+    font-size: 0.75rem;
+    color: #aaa;
+    text-align: right;
+    transition: color 0.2s;
+}
+.char-counter.counter-warn  { color: #e67e22; }
+.char-counter.counter-error { color: #c0392b; font-weight: bold; }
