@@ -32,6 +32,11 @@ body {
 .sidebar p  { font-size: 0.9rem; color: #7f8c8d; }
 
 /* #22: Styled file picker ─────────────────────────────────────────────────── */
+#upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 .file-picker {
     display: flex;
     flex-direction: column;
